@@ -4,99 +4,117 @@
 [![Tesseract OCR](https://img.shields.io/badge/Tesseract%20OCR-Download-green)](https://github.com/UB-Mannheim/tesseract/wiki)
 [![Poppler](https://img.shields.io/badge/Poppler-Download-orange)](https://github.com/oschwartz10612/poppler-windows/releases/download/v24.08.0-0/Release-24.08.0-0.zip)
 
-This Python script is part of the Bangla RAG (Retrieval-Augmented Generation) pipeline project, specifically designed to enhance the PoRAG (https://github.com/Bangla-RAG/PoRAG) system. It extracts Bengali text from both PDF and TXT files, with a focus on Optical Character Recognition (OCR) for PDFs. This functionality is particularly useful for incorporating scanned or non-searchable PDFs containing Bengali text into the RAG pipeline, thereby improving the system's ability to process and generate responses based on a wider range of Bangla language resources.
+This Python script is part of the Bangla RAG (Retrieval-Augmented Generation) pipeline project, specifically designed to enhance the PoRAG (https://github.com/Bangla-RAG/PoRAG) system. It extracts Bengali text from PDF files using Optical Character Recognition (OCR). This functionality is particularly useful for incorporating scanned or non-searchable PDFs containing Bengali text into the RAG pipeline, thereby improving the system's ability to process and generate responses based on a wider range of Bangla language resources.
 
 ## Features
 
-- Extract Bengali text from PDFs using OCR
+- Extract Bengali text from PDFs using OCR (default language)
+- Support for other languages through optional parameters
 - Automatic output file naming
-- Easy to use as a script or imported module
+- Progress bar for tracking OCR process
+- Configurable via environment variables
+- Command-line interface for easy usage
+- Multithreading for faster processing
 
 ## Prerequisites
 
 1. **Python 3.6+**
+
 2. **Tesseract OCR**:
    - Download from: https://github.com/UB-Mannheim/tesseract/wiki
-   - Default path: `C:\Program Files\Tesseract-OCR`
    - Ensure Bengali language data is installed
+
 3. **Poppler**:
-   - Download from: https://github.com/oschwartz10612/poppler-windows/releases/download/v24.08.0-0/Release-24.08.0-0.zip
-   - Extract the ZIP file
-   - By default, the path will be something like: `C:\Users\USER\Downloads\Release-24.08.0-0\poppler-24.08.0\Library\bin`
-   - For better management, you can:
-     - Rename the `poppler-24.08.0` folder to simply `poppler`
-     - Move this folder to `C:\Program Files\`
-   - The final path could be `C:\Program Files\poppler\Library\bin`
-   - Ensure this bin directory is added to your system's PATH
+   - For Windows:
+     - Download from: https://github.com/oschwartz10612/poppler-windows/releases/download/v24.08.0-0/Release-24.08.0-0.zip
+     - Extract the ZIP file to one of the following common directories:
+       - `C:\Program Files`
+       - `C:\Program Files (x86)`
+       - Your user's Downloads folder
+     - Add the `bin` directory of the extracted Poppler folder to your system's PATH
+   - For Unix-based systems (Linux, macOS):
+     - Use your package manager to install Poppler. For example:
+       - Ubuntu/Debian: `sudo apt-get install poppler-utils`
+       - macOS (using Homebrew): `brew install poppler`
+     - Poppler should be automatically available in common directories like `/usr/bin` or `/usr/local/bin`
+
+   Note: The script will automatically search for Poppler in these common directories. If you install Poppler in a different location, you may need to set the `POPPLER_PATH` environment variable.
+
 4. **Python Libraries**:
    Install the required Python packages using the provided `requirements.txt` file:
    ```bash
    pip install -r requirements.txt
    ```
 
-Ensure Tesseract and Poppler bin directories are in your system's PATH. For Poppler, this means adding `C:\Program Files\poppler\bin` (or `C:\Users\USER\Downloads\Release-24.08.0-0\poppler-24.08.0\Library\bin`) to your PATH.
-
 ## Installation
 
 1. Clone this repository or download `ocr.py` and `requirements.txt`.
-2. Set up all prerequisites as described above.
+2. Set up all prerequisites as described above, ensuring Tesseract OCR and Poppler are properly installed on your system.
 3. Install the required Python packages:
    ```bash
    pip install -r requirements.txt
    ```
-4. If you've used a different path for Poppler, update the `poppler_path` in the `setup_environment()` function:
+4. Ensure that both Tesseract and Poppler executables are in your system's PATH or set the appropriate environment variables (TESSERACT_PATH and POPPLER_PATH).
 
-   ```python
-   poppler_path = r"C:\Program Files\poppler\Library\bin"
-   # or if you didn't rename the folder:
-   # poppler_path = r"C:\Users\USER\Downloads\Release-24.08.0-0\poppler-24.08.0\Library\bin"
-   ```
+## Configuration
 
-   Replace `USER` with your Windows username if using the default path.
+You can configure the script using environment variables:
+
+- `TESSERACT_PATH`: Path to the Tesseract executable
+- `POPPLER_PATH`: Path to the Poppler bin directory
+- `OCR_LANGUAGE`: Default language for OCR (default is 'ben' for Bengali)
+
+If these are not set, the script will attempt to find the required executables automatically.
 
 ## Usage
 
 ### As a script:
-```bash
-python ocr.py
+
+```
+python ocr.py [pdf_path] [-o OUTPUT] [-l LANGUAGE]
 ```
 
+- `pdf_path`: Path to the input PDF file (default: "Freedom Fight.pdf")
+- `-o` or `--output`: Path to save the extracted text (optional)
+- `-l` or `--language`: Language for OCR (default: 'ben' for Bengali)
+
+Examples:
+```
+# Process a Bengali PDF (default)
+python ocr.py "my_bengali_document.pdf"
+
+# Process an English PDF
+python ocr.py "english_document.pdf" -l eng
+
+# Specify output file
+python ocr.py "document.pdf" -o "output.txt"
+```
+
+If no arguments are provided, it will process "Freedom Fight.pdf" with Bengali as the default language.
+
 ### As a module:
-```python
+
+```
 from ocr import process_pdf
 
+# Process a Bengali PDF (default)
 extracted_text = process_pdf("path/to/your/bengali_document.pdf")
+
+# Process an English PDF
+english_text = process_pdf("path/to/english_document.pdf", language="eng")
+
 print(extracted_text)
 ```
 
 ## How it works
 
-1. **Environment Setup**:
-   ```python
-   def setup_environment() -> str:
-       os.environ["TESSDATA_PREFIX"] = r"C:\Program Files\Tesseract-OCR\tessdata"
-       pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-       
-       poppler_path = r"C:\Program Files\poppler\Library\bin"
-       os.environ["PATH"] += os.pathsep + poppler_path
-       return poppler_path
-   ```
+1. **Environment Setup**: The script first checks for environment variables or attempts to find Tesseract and Poppler automatically.
 
-2. **PDF to Image Conversion** (using Poppler):
-   ```python
-   images = convert_from_path(pdf_path, poppler_path=poppler_path)
-   ```
+2. **PDF to Image Conversion**: The PDF is converted to images using Poppler.
 
-3. **OCR Processing** (using Tesseract):
-   ```python
-   for image in images:
-       text = pytesseract.image_to_string(image, lang='ben')
-       # Process text...
-   ```
+3. **OCR Processing**: Each image is processed using Tesseract OCR with multithreading for improved performance. Bengali is used as the default language unless specified otherwise.
 
-## Configuration
-
-Modify paths in `setup_environment()` if Tesseract or Poppler are installed in different locations.
+4. **Text Compilation**: The extracted text from all pages is compiled in the correct order.
 
 ## Limitations
 
@@ -109,7 +127,9 @@ Modify paths in `setup_environment()` if Tesseract or Poppler are installed in d
 Contributions, issues, and feature requests are welcome. Feel free to open an issue or submit a pull request.
 
 ## Acknowledgments
-- https://github.com/UB-Mannheim/tesseract/wiki
-- https://github.com/oschwartz10612/poppler-windows/releases/download/v24.08.0-0/Release-24.08.0-0.zip
+- Tesseract OCR: https://github.com/tesseract-ocr/tesseract
+- Poppler: https://poppler.freedesktop.org/
+- tqdm: https://github.com/tqdm/tqdm
+- argparse: https://docs.python.org/3/library/argparse.html
 - https://github.com/shihabshahid/python_bangla_ocr_pdf_to_text
 - https://github.com/pritomshad/bangla-pdf-to-text-OCR
