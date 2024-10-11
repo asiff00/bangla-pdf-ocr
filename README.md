@@ -29,17 +29,22 @@ This Python script is part of the Bangla RAG (Retrieval-Augmented Generation) pi
    - The final path could be `C:\Program Files\poppler\Library\bin`
    - Ensure this bin directory is added to your system's PATH
 4. **Python Libraries**:
+   Install the required Python packages using the provided `requirements.txt` file:
    ```bash
-   pip install pytesseract pdf2image Pillow
+   pip install -r requirements.txt
    ```
 
 Ensure Tesseract and Poppler bin directories are in your system's PATH. For Poppler, this means adding `C:\Program Files\poppler\bin` (or `C:\Users\USER\Downloads\Release-24.08.0-0\poppler-24.08.0\Library\bin`) to your PATH.
 
 ## Installation
 
-1. Clone this repository or download `ocr.py`.
+1. Clone this repository or download `ocr.py` and `requirements.txt`.
 2. Set up all prerequisites as described above.
-3. If you've used a different path for Poppler, update the `poppler_path` in the `setup_environment()` function:
+3. Install the required Python packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. If you've used a different path for Poppler, update the `poppler_path` in the `setup_environment()` function:
 
    ```python
    poppler_path = r"C:\Program Files\poppler\Library\bin"
