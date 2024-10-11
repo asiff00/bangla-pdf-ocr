@@ -51,7 +51,8 @@ Ensure Tesseract and Poppler bin directories are in your system's PATH. For Popp
 
 ## Usage
 
-### As a script:```bash
+### As a script:
+```bash
 python ocr.py
 ```
 
