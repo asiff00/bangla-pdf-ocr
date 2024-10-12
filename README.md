@@ -1,135 +1,172 @@
-# PDF OCR Text Extractor for Bengali
+# Bangla PDF OCR
 
+[![PyPI version](https://badge.fury.io/py/bangla-pdf-ocr.svg)](https://badge.fury.io/py/bangla-pdf-ocr)
 [![Bangla RAG](https://img.shields.io/badge/Bangla%20RAG-Visit%20Project-blue)](https://github.com/Bangla-RAG/PoRAG)
-[![Tesseract OCR](https://img.shields.io/badge/Tesseract%20OCR-Download-green)](https://github.com/UB-Mannheim/tesseract/wiki)
-[![Poppler](https://img.shields.io/badge/Poppler-Download-orange)](https://github.com/oschwartz10612/poppler-windows/releases/download/v24.08.0-0/Release-24.08.0-0.zip)
 
-This Python script is part of the Bangla RAG (Retrieval-Augmented Generation) pipeline project, specifically designed to enhance the PoRAG (https://github.com/Bangla-RAG/PoRAG) system. It extracts Bengali text from PDF files using Optical Character Recognition (OCR). This functionality is particularly useful for incorporating scanned or non-searchable PDFs containing Bengali text into the RAG pipeline, thereby improving the system's ability to process and generate responses based on a wider range of Bangla language resources.
+> **Note:** This repository is the official home for the `bangla-pdf-ocr` package. You can use this repository for package-related issues, discussions, and contributions. We welcome your feedback and involvement in improving the tool!
 
-## Features
+Bangla PDF OCR is a powerful tool that extracts Bengali text from PDF files. It's designed for simplicity and works on Windows, macOS, and Linux without any extra downloads or configurations. This tool was initially developed as a part of the Bangla RAG (Retrieval-Augmented Generation) pipeline project, specifically designed to enhance the [PoRAG](https://github.com/Bangla-RAG/PoRAG) system, but it can be used independently for Bengali OCR tasks. Use it as a standalone tool for your Bengali OCR needs.
 
-- Extract Bengali text from PDFs using OCR (default language)
-- Support for other languages through optional parameters
-- Automatic output file naming
-- Progress bar for tracking OCR process
-- Configurable via environment variables
-- Command-line interface for easy usage
-- Multithreading for faster processing
+
+
+## Key Features
+
+- Extracts Bengali text from PDFs quickly and accurately
+- Works on Windows, macOS, and Linux
+- Easy to use from both command line and Python scripts
+- Installs all necessary components automatically
+- Supports other languages besides Bengali
+- Multi-threaded processing for improved performance
+
+## Quick Start
+
+1. Install the package:
+   ```bash
+   pip install bangla-pdf-ocr
+   ```
+
+2. Run the setup command to install dependencies:
+   ```bash
+   bangla-pdf-ocr-setup
+   ```
+
+3. Start using it right away!
+
+   From command line:
+   ```bash
+   bangla-pdf-ocr your_file.pdf
+   ```
+
+   In your Python script:
+   ```python
+   from bangla_pdf_ocr import process_pdf
+   path = "path/to/your/pdf_file.pdf"
+   output_file = "output.txt"
+   extracted_text = process_pdf(path, output_file)
+   print(extracted_text)
+   ```
+
+That's it! No additional downloads or configurations needed.
 
 ## Prerequisites
 
-1. **Python 3.6+**
-
-2. **Tesseract OCR**:
-   - Download from: https://github.com/UB-Mannheim/tesseract/wiki
-   - Ensure Bengali language data is installed
-
-3. **Poppler**:
-   - For Windows:
-     - Download from: https://github.com/oschwartz10612/poppler-windows/releases/download/v24.08.0-0/Release-24.08.0-0.zip
-     - Extract the ZIP file to one of the following common directories:
-       - `C:\Program Files`
-       - `C:\Program Files (x86)`
-       - Your user's Downloads folder
-     - Add the `bin` directory of the extracted Poppler folder to your system's PATH
-   - For Unix-based systems (Linux, macOS):
-     - Use your package manager to install Poppler. For example:
-       - Ubuntu/Debian: `sudo apt-get install poppler-utils`
-       - macOS (using Homebrew): `brew install poppler`
-     - Poppler should be automatically available in common directories like `/usr/bin` or `/usr/local/bin`
-
-   Note: The script will automatically search for Poppler in these common directories. If you install Poppler in a different location, you may need to set the `POPPLER_PATH` environment variable.
-
-4. **Python Libraries**:
-   Install the required Python packages using the provided `requirements.txt` file:
-   ```bash
-   pip install -r requirements.txt
-   ```
+- Python 3.6 or higher
+- pip (Python package installer)
 
 ## Installation
 
-1. Clone this repository or download `ocr.py` and `requirements.txt`.
-2. Set up all prerequisites as described above, ensuring Tesseract OCR and Poppler are properly installed on your system.
-3. Install the required Python packages:
+1. Install the package from PyPI:
    ```bash
-   pip install -r requirements.txt
+   pip install bangla-pdf-ocr
    ```
-4. Ensure that both Tesseract and Poppler executables are in your system's PATH or set the appropriate environment variables (TESSERACT_PATH and POPPLER_PATH).
 
-## Configuration
+2. Set up system dependencies:
+   ```bash
+   bangla-pdf-ocr-setup
+   ```
+   This command installs necessary dependencies based on your operating system:
+   - Linux: Installs `tesseract-ocr`, `poppler-utils`, and `tesseract-ocr-ben`
+   - macOS: Installs `tesseract`, `poppler`, and `tesseract-lang` via Homebrew
+   - Windows: Downloads and installs Tesseract OCR and Poppler, adding them to the system PATH
 
-You can configure the script using environment variables:
+   Note: On Windows, you may need to run the command prompt as administrator.
 
-- `TESSERACT_PATH`: Path to the Tesseract executable
-- `POPPLER_PATH`: Path to the Poppler bin directory
-- `OCR_LANGUAGE`: Default language for OCR (default is 'ben' for Bengali)
-
-If these are not set, the script will attempt to find the required executables automatically.
+3. Verify the installation:
+   ```bash
+   bangla-pdf-ocr-verify
+   ```
+   This command checks if all required dependencies are properly installed and accessible.
 
 ## Usage
 
-### As a script:
+### Command-line Interface
 
-```
-python ocr.py [pdf_path] [-o OUTPUT] [-l LANGUAGE]
-```
-
-- `pdf_path`: Path to the input PDF file (default: "Freedom Fight.pdf")
-- `-o` or `--output`: Path to save the extracted text (optional)
-- `-l` or `--language`: Language for OCR (default: 'ben' for Bengali)
-
-Examples:
-```
-# Process a Bengali PDF (default)
-python ocr.py "my_bengali_document.pdf"
-
-# Process an English PDF
-python ocr.py "english_document.pdf" -l eng
-
-# Specify output file
-python ocr.py "document.pdf" -o "output.txt"
+Basic usage:
+```bash
+bangla-pdf-ocr [input_pdf] [-o output_file] [-l language]
 ```
 
-If no arguments are provided, it will process "Freedom Fight.pdf" with Bengali as the default language.
+### Options:
+- `input_pdf`: Path to the input PDF file (optional, uses a sample PDF if not provided)
+- `-o, --output`: Specify the output file path (default: input filename with `.txt` extension)
+- `-l, --language`: Specify the OCR language (default: 'ben' for Bengali)
 
-### As a module:
+### Examples:
 
+1. Process the default sample PDF:
+   ```bash
+   bangla-pdf-ocr
+   ```
+
+2. Process a specific PDF:
+   ```bash
+   bangla-pdf-ocr path/to/my_document.pdf
+   ```
+
+3. Specify an output file:
+   ```bash
+   bangla-pdf-ocr path/to/my_document.pdf -o path/to/extracted_text.txt
+   ```
+
+4. Try a sample PDF extraction:
+   ```bash
+   bangla-pdf-ocr
+   ```
+   This command processes a sample Bengali PDF file included with the package, demonstrating the text extraction capabilities.
+
+### Using as a Python Module
+
+You can also use Bangla PDF OCR as a module in your Python scripts:
+
+```python
+from bangla_pdf_ocr import process_pdf
+
+path = "bangla_pdf_ocr\data\Freedom Fight.pdf"
+output_file = "Extracted_text.txt"
+extracted_text = process_pdf(path, output_file)
+
+print(f"Text extracted and saved to: {output_file}")
 ```
-from ocr import process_pdf
 
-# Process a Bengali PDF (default)
-extracted_text = process_pdf("path/to/your/bengali_document.pdf")
+## Troubleshooting
 
-# Process an English PDF
-english_text = process_pdf("path/to/english_document.pdf", language="eng")
+If you encounter any issues:
 
-print(extracted_text)
-```
+1. Run the verification command:
+   ```bash
+   bangla-pdf-ocr-verify
+   ```
 
-## How it works
+2. For Windows users:
+   - Run `setup/verify` command prompts as administrator if you encounter permission issues.
+   - Restart your command prompt or IDE after installation to ensure PATH changes take effect.
 
-1. **Environment Setup**: The script first checks for environment variables or attempts to find Tesseract and Poppler automatically.
+3. Check the console output and logs for any error messages.
 
-2. **PDF to Image Conversion**: The PDF is converted to images using Poppler.
+4. If automatic installation fails, refer to the manual installation instructions provided by the setup command.
 
-3. **OCR Processing**: Each image is processed using Tesseract OCR with multithreading for improved performance. Bengali is used as the default language unless specified otherwise.
+5. Ensure you have the latest version of the package:
+   ```bash
+   pip install --upgrade bangla-pdf-ocr
+   ```
 
-4. **Text Compilation**: The extracted text from all pages is compiled in the correct order.
+6. If problems persist, please open an issue on our GitHub repository with detailed information about the error and your system configuration.
 
-## Limitations
+## Reporting Issues
 
-- OCR accuracy depends on PDF quality and text complexity
-- Large PDFs may take significant processing time
-- Complex layouts might not be processed accurately
+If you encounter any problems or have suggestions for Bangla PDF OCR:
 
-## Contributing
+1. Check [existing issues](https://github.com/asiff00/bangla-pdf-ocr/issues) to see if your issue has already been reported.
+2. If not, [create a new issue](https://github.com/asiff00/bangla-pdf-ocr/issues/new) on our GitHub repository.
+3. Provide detailed information about the problem, including steps to reproduce it.
 
-Contributions, issues, and feature requests are welcome. Feel free to open an issue or submit a pull request.
+We appreciate your feedback to help improve Bangla PDF OCR!
 
 ## Acknowledgments
-- Tesseract OCR: https://github.com/tesseract-ocr/tesseract
-- Poppler: https://poppler.freedesktop.org/
-- tqdm: https://github.com/tqdm/tqdm
-- argparse: https://docs.python.org/3/library/argparse.html
-- https://github.com/shihabshahid/python_bangla_ocr_pdf_to_text
-- https://github.com/pritomshad/bangla-pdf-to-text-OCR
+
+- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract)
+- [Poppler](https://poppler.freedesktop.org/)
+- [python_bangla_ocr_pdf_to_text](https://github.com/shihabshahid/python_bangla_ocr_pdf_to_text)
+- [bangla-pdf-to-text-OCR](https://github.com/pritomshad/bangla-pdf-to-text-OCR)
+
+Happy OCR processing!

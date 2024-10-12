@@ -1,0 +1,4 @@
+include README.md
+include requirements.txt
+recursive-include bangla_pdf_ocr/scripts *
+recursive-include bangla_pdf_ocr/data *
